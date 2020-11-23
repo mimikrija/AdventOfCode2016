@@ -25,7 +25,6 @@ def add_coordinates(start,end,locations):
 
     coordinate = start
     for n in range (range_start + step,range_end,step):
-            #print(n)
             if is_horizontal:
                 coordinate = (n, coordinate[1]) 
             else:
@@ -49,7 +48,6 @@ solution_2 = None
 for direction in directions:
     x = 0
     y = 0
-    #print(direction)
     if direction[0] == 'R':
         absolute_index += 1
     else:
@@ -69,7 +67,6 @@ for direction in directions:
         solution_2 = add_coordinates(locations[-1],current,locations)
     locations.append(current)
 
-#print(locations)
 print ("Part one solution: I am ", abs(vertical_distance) +abs(horizontal_distance), " blocks away!")
 # Part one solution: I am  288  blocks away!
 
