@@ -2,10 +2,8 @@ with open('./inputs/01', 'r') as infile:
     directions = infile.readline().split(', ')
 
 def get_direction(absolute_index):
-    if absolute_index > 3:
+    if absolute_index > 3 or absolute_index < -4:
         absolute_index = absolute_index % 4
-    if absolute_index < -4:
-        absolute_index = - (-absolute_index %4)
     return sides[absolute_index]
 
 def add_coordinates(start,end,locations):
