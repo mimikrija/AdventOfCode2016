@@ -2,6 +2,7 @@ with open('./inputs/01', 'r') as infile:
     directions = infile.readline().split(', ')
 
 def get_direction(absolute_index):
+    sides = ['n','e','s','w']
     if absolute_index > 3 or absolute_index < -4:
         absolute_index = absolute_index % 4
     return sides[absolute_index]
@@ -36,7 +37,6 @@ def add_coordinates(start,end,locations):
     return None
 
 
-sides = ['n','e','s','w']
 
 
 horizontal_distance = 0
@@ -46,20 +46,21 @@ locations = [(0,0)]
 solution_2 = None
 
 for direction in directions:
+    rotation, distance = direction[0], int(direction[1:])
     x = 0
     y = 0
-    if direction[0] == 'R':
+    if rotation == 'R':
         absolute_index += 1
     else:
         absolute_index -= 1
     if get_direction(absolute_index) == 'n':
-        y = int(direction[1:])
+        y = distance
     if get_direction(absolute_index) == 's':
-        y = - int(direction[1:])
+        y = - distance
     if get_direction(absolute_index) == 'e':
-        x = int(direction[1:])
+        x = distance
     if get_direction(absolute_index) == 'w':
-        x = -int(direction[1:])
+        x = -distance
     vertical_distance += y
     horizontal_distance += x
     current = (horizontal_distance,vertical_distance)
