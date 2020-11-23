@@ -31,7 +31,7 @@ def add_coordinates(start,end,locations):
         step = -1
 
     coordinate = start
-    for n in range (range_start + step,range_end,step):
+    for n in range (range_start + sign,range_end,sign):
             if is_horizontal:
                 coordinate = (n, coordinate[1]) 
             else:
