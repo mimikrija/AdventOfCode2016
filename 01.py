@@ -7,6 +7,12 @@ def get_direction(absolute_index):
         absolute_index = absolute_index % 4
     return sides[absolute_index]
 
+def direction_factor(side):
+    if side == 'n' or side == 'e':
+        return 1
+    else:
+        return -1
+
 def add_coordinates(start,end,locations):
     is_horizontal = False
     is_vertical = False
@@ -53,14 +59,12 @@ for direction in directions:
         absolute_index += 1
     else:
         absolute_index -= 1
-    if get_direction(absolute_index) == 'n':
-        y = distance
-    if get_direction(absolute_index) == 's':
-        y = - distance
-    if get_direction(absolute_index) == 'e':
-        x = distance
-    if get_direction(absolute_index) == 'w':
-        x = -distance
+    sign = direction_factor(get_direction(absolute_index))
+    if get_direction(absolute_index) == 'n' or get_direction(absolute_index) == 's':
+        y = sign * distance
+    if get_direction(absolute_index) == 'e' or get_direction(absolute_index) == 'w':
+        x = sign * distance
+
     vertical_distance += y
     horizontal_distance += x
     current = (horizontal_distance,vertical_distance)
