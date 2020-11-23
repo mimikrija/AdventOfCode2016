@@ -14,25 +14,16 @@ def direction_factor(side):
         return -1
 
 def add_coordinates(start,end,locations):
-    is_horizontal = False
-    is_vertical = False
-    if start[1] == end[1]: #horizontal movement
-        is_horizontal = True
+    if global_direction == 'e' or global_direction == 'w': #horizontal movement
         range_start = start[0]
         range_end = end[0]
     else:
-        is_vertical = True
         range_start = start[1]
         range_end = end[1]
 
-    if range_end > range_start:
-        step = 1
-    else:
-        step = -1
-
     coordinate = start
     for n in range (range_start + sign,range_end,sign):
-            if is_horizontal:
+            if global_direction == 'e' or global_direction == 'w':
                 coordinate = (n, coordinate[1]) 
             else:
                 coordinate = (coordinate[0], n)
@@ -59,10 +50,11 @@ for direction in directions:
         absolute_index += 1
     else:
         absolute_index -= 1
-    sign = direction_factor(get_direction(absolute_index))
-    if get_direction(absolute_index) == 'n' or get_direction(absolute_index) == 's':
+    global_direction = get_direction(absolute_index)
+    sign = direction_factor(global_direction)
+    if global_direction == 'n' or global_direction == 's':
         y = sign * distance
-    if get_direction(absolute_index) == 'e' or get_direction(absolute_index) == 'w':
+    if global_direction == 'e' or global_direction == 'w':
         x = sign * distance
 
     vertical_distance += y
