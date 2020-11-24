@@ -12,10 +12,9 @@ orientation_vector = {
     's': (0, -1),
     'w': (-1, 0)
 }
-    
 
 def manhattan_distance(coordinate):
-    return abs(coordinate[0]) + abs(coordinate[1])
+    return sum(abs(p) for p in coordinate)
 
 
 absolute_index = 0
