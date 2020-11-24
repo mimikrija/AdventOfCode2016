@@ -13,28 +13,8 @@ def direction_factor(side):
     else:
         return -1
 
-def add_coordinates(start,end,locations):
-    if global_direction == 'e' or global_direction == 'w': #horizontal movement
-        range_start = start[0]
-        range_end = end[0]
-    else:
-        range_start = start[1]
-        range_end = end[1]
-
-    coordinate = start
-    for n in range (range_start + sign,range_end,sign):
-            if global_direction == 'e' or global_direction == 'w':
-                coordinate = (n, coordinate[1]) 
-            else:
-                coordinate = (coordinate[0], n)
-            if coordinate in locations:
-                solution_2 = abs(coordinate[0]) + abs(coordinate[1])
-                return solution_2
-            locations.append(coordinate)
-    return None
-
-
-
+def manhatan_distance(coordinate):
+    return abs(coordinate[0]) + abs(coordinate[1])
 
 horizontal_distance = 0
 vertical_distance = 0
@@ -57,14 +37,24 @@ for direction in directions:
     if global_direction == 'e' or global_direction == 'w':
         x = sign * distance
 
-    vertical_distance += y
-    horizontal_distance += x
-    current = (horizontal_distance,vertical_distance)
-    if solution_2 == None:
-        solution_2 = add_coordinates(locations[-1],current,locations)
-    locations.append(current)
+    current = locations[-1]
 
-print ("Part one solution: I am ", abs(vertical_distance) +abs(horizontal_distance), " blocks away!")
+    if solution_2 == None:
+        dx = 0
+        dy = 0
+        for _ in range(distance):
+            if global_direction == 'n' or global_direction == 's':
+                dy += sign
+                coordinate = (current[0],current[1]+dy)
+            if global_direction == 'e' or global_direction == 'w':
+                dx += sign
+                coordinate = (current[0]+dx,current[1])
+            if coordinate in locations:
+                solution_2 = manhatan_distance(coordinate)
+            locations.append(coordinate)
+    locations.append((current[0]+x,current[1]+y))
+
+print ("Part one solution: I am ", manhatan_distance(locations[-1]), " blocks away!")
 # Part one solution: I am  288  blocks away!
 
 print ("Part two solution: Actually, the headquarters is ", solution_2, " blocks away!")
