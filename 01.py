@@ -40,15 +40,12 @@ for direction in directions:
     current = locations[-1]
 
     if solution_2 == None:
-        dx = 0
-        dy = 0
+        coordinate = current
         for _ in range(distance):
             if global_direction == 'n' or global_direction == 's':
-                dy += sign
-                coordinate = (current[0],current[1]+dy)
+                coordinate = (coordinate[0],coordinate[1]+sign)
             if global_direction == 'e' or global_direction == 'w':
-                dx += sign
-                coordinate = (current[0]+dx,current[1])
+                coordinate = (coordinate[0]+sign,coordinate[1])
             if coordinate in locations:
                 solution_2 = manhatan_distance(coordinate)
             locations.append(coordinate)
