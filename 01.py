@@ -3,8 +3,7 @@ with open('./inputs/01', 'r') as infile:
 
 def get_direction(absolute_index):
     sides = ['n','e','s','w']
-    if absolute_index > 3 or absolute_index < -4:
-        absolute_index = absolute_index % 4
+    absolute_index = absolute_index % 4
     return sides[absolute_index]
 
 def direction_factor(side):
