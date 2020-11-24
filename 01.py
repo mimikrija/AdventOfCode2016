@@ -6,50 +6,46 @@ def get_direction(absolute_index):
     absolute_index = absolute_index % 4
     return sides[absolute_index]
 
-def direction_factor(side):
-    if side == 'n' or side == 'e':
-        return 1
-    else:
-        return -1
+orientation_vector = {
+    'n': (0, 1),
+    'e': (1, 0),
+    's': (0, -1),
+    'w': (-1, 0)
+}
+    
 
-def manhatan_distance(coordinate):
+def manhattan_distance(coordinate):
     return abs(coordinate[0]) + abs(coordinate[1])
 
 
 absolute_index = 0
-locations = [(0,0)]
+locations = []
+solution_1 = (0,0)
 solution_2 = None
-x = 0
-y = 0
+
 
 for direction in directions:
     rotation, distance = direction[0], int(direction[1:])
-    coordinate = (x,y)
+    coordinate = solution_1
 
     if rotation == 'R':
         absolute_index += 1
     else:
         absolute_index -= 1
     global_direction = get_direction(absolute_index)
-    sign = direction_factor(global_direction)
-    if global_direction == 'n' or global_direction == 's':
-        y += sign * distance
-    if global_direction == 'e' or global_direction == 'w':
-        x += sign * distance
-    
+
+    solution_1 = tuple(solution_1[i] + orientation_vector[global_direction][i] * distance for i in range(2))
+
     # part 2:
     if solution_2 == None:
         for _ in range(distance):
-            if global_direction == 'n' or global_direction == 's':
-                coordinate = (coordinate[0],coordinate[1]+sign)
-            if global_direction == 'e' or global_direction == 'w':
-                coordinate = (coordinate[0]+sign,coordinate[1])
+            coordinate = tuple(coordinate[i] + orientation_vector[global_direction][i] for i in range(2))
             if coordinate in locations:
-                solution_2 = manhatan_distance(coordinate)
+                solution_2 = coordinate
             locations.append(coordinate)
-#print (locations)
-print ("Part one solution: I am ", manhatan_distance((x,y)), " blocks away!")
+
+print ("Part one solution: I am ", manhattan_distance(solution_1), " blocks away!")
 # Part one solution: I am  288  blocks away!
 
-print ("Part two solution: Actually, the headquarters is ", solution_2, " blocks away!")
+print ("Part two solution: Actually, the headquarters is ", manhattan_distance(solution_2), " blocks away!")
 # Part two solution: Actually, the headquarters is  111  blocks away!
