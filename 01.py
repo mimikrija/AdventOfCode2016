@@ -1,3 +1,5 @@
+# Day 1: No Time for a Taxicab
+
 with open('./inputs/01', 'r') as infile:
     directions = infile.readline().split(', ')
 
