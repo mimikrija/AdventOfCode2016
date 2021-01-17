@@ -62,5 +62,6 @@ instructions = helpers.get_input('inputs/02', '\n')
 part_1 = bathroom_code(instructions, KEYPAD)
 part_2 = bathroom_code(instructions, WACKY_KEYPAD)
 
-print(part_1) # 99332
-print(part_2) # DD483
+helpers.print_solutions(part_1, part_2)
+# Part 1 solution is: 99332
+# Part 2 solution is: DD483
