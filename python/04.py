@@ -31,12 +31,7 @@ def rotate_letter(c, amount):
 
 
 def decipher_name(room):
-    result = []
-    words, number = room.words, room.ID
-    for word in words:
-        new = ''.join( rotate_letter(c, number) for c in word)
-        result.append(new)
-    return result
+    return (''.join(rotate_letter(c, room.ID) for c in word) for word in room.words)
 
 
 def find_room(rooms, match):
