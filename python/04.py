@@ -35,8 +35,7 @@ def decipher_name(room):
 
 
 def find_room(rooms, match):
-    actual_rooms = filter(is_real_room, rooms)
-    for room in actual_rooms:
+    for room in filter(is_real_room, rooms):
         if match in decipher_name(room):
             return room.ID
 
