@@ -44,11 +44,13 @@ def decypher_name(room):
     return result
 
 
-for room in rooms:
-    if is_real_room(room):
-        new = decypher_name(room)
-        if 'object' in new:
-            part_2 = room.ID
+def find_room(rooms, match):
+    actual_rooms = filter(is_real_room, rooms)
+    for room in actual_rooms:
+        if match in decypher_name(room):
+            return room.ID
+
+part_2 = find_room(rooms, 'object')
 
 helpers.print_solutions(part_1, part_2)
 # Part 1 solution is: 409147
