@@ -1,6 +1,6 @@
 import santas_little_helpers as helpers
 
-DIGIT_LOCATION = {
+KEYPAD = {
     '1':-1+1j,
     '2': 0+1j,
     '3': 1+1j,
@@ -12,7 +12,7 @@ DIGIT_LOCATION = {
     '9': 1-1j,
 }
 
-WACKY_DIGIT_LOCATION = {
+WACKY_KEYPAD= {
     '1': 0+2j,
     '2':-1+1j,
     '3': 0+1j,
@@ -35,29 +35,29 @@ MOVE = {
     'L':-1+0j,
 }
 
-def convert_location_to_digit(in_location, digits):
-    for digit, location in digits.items():
+def convert_location_to_digit(in_location, keypad):
+    for digit, location in keypad.items():
         if in_location == location:
             return digit
 
-def next_location(current_location, move, digits):
+def next_location(current_location, move, keypad):
     new_location = current_location + MOVE[move]
-    if new_location not in digits.values():
+    if new_location not in keypad.values():
         return current_location
     else:
         return new_location
 
-def get_digit(instruction, starting_number, digits):
-    current_location = digits[starting_number]
+def get_digit(instruction, starting_number, keypad):
+    current_location = keypad[starting_number]
     for move in instruction:
-        current_location = next_location(current_location, move, digits)
-    return convert_location_to_digit(current_location, digits)
+        current_location = next_location(current_location, move, keypad)
+    return convert_location_to_digit(current_location, keypad)
 
-def get_code(instructions, digits, start_from = '5'):
+def get_code(instructions, keypad, start_from = '5'):
     code = ''
     current_digit = start_from
     for instruction in instructions:
-        next_digit = get_digit(instruction, current_digit, digits)
+        next_digit = get_digit(instruction, current_digit, keypad)
         code += next_digit
         current_digit = next_digit
     return code
@@ -65,8 +65,8 @@ def get_code(instructions, digits, start_from = '5'):
 
 instructions = helpers.get_input('inputs/02', '\n')
 
-part_1 = get_code(instructions, DIGIT_LOCATION)
-part_2 = get_code(instructions, WACKY_DIGIT_LOCATION)
+part_1 = get_code(instructions, KEYPAD)
+part_2 = get_code(instructions, WACKY_KEYPAD)
 
 print(part_1) # 99332
 print(part_2) # DD483
