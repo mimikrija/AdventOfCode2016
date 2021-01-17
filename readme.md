@@ -20,3 +20,4 @@ Legend:
 Puzzle | Solution(s) | Remarks |
 ---    |---    |----
 [Day 1: No Time for a Taxicab](https://adventofcode.com/2016/day/1) | [Python](python/01.py) | :hammer: 2D grid, Manhattan distance. Might have overcomplicated it, will get back to it...
+[Day 2: Bathroom Security](https://adventofcode.com/2016/day/2) | [Python](python/02.py) | :hammer: Again 2D grid. I used complex numbers to define button location on keypads. I guess there must be a way to automate button - coordinate dictionary generation but I was lazy and did it by hand.

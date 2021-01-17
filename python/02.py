@@ -1,3 +1,5 @@
+# Day 2: Bathroom Security
+
 import santas_little_helpers as helpers
 
 KEYPAD = {'1':-1+1j, '2': 0+1j, '3': 1+1j,
