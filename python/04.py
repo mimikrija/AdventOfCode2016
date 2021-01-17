@@ -21,12 +21,6 @@ def is_real_room(room):
         return False
 
 
-raw_room_data = [re.findall(r'\w+', line) for line in helpers.get_input('inputs/04', '\n')]
-rooms = [ RoomData(raw_data[:-2], int(raw_data[-2]), raw_data[-1]) for raw_data in raw_room_data ]
-
-part_1 = sum(is_real_room(room) for room in rooms)
-
-
 def rotate_letter(c, number):
     offset = number % 26
     total = ord(c) + offset
@@ -35,7 +29,8 @@ def rotate_letter(c, number):
     else:
         return chr(ord('a')+total-ord('z')-1)
 
-def decypher_name(room):
+
+def decipher_name(room):
     result = []
     words, number = room.words, room.ID
     for word in words:
@@ -47,9 +42,15 @@ def decypher_name(room):
 def find_room(rooms, match):
     actual_rooms = filter(is_real_room, rooms)
     for room in actual_rooms:
-        if match in decypher_name(room):
+        if match in decipher_name(room):
             return room.ID
 
+
+
+raw_room_data = [re.findall(r'\w+', line) for line in helpers.get_input('inputs/04', '\n')]
+rooms = [RoomData(raw_data[:-2], int(raw_data[-2]), raw_data[-1]) for raw_data in raw_room_data]
+
+part_1 = sum(is_real_room(room) for room in rooms)
 part_2 = find_room(rooms, 'object')
 
 helpers.print_solutions(part_1, part_2)
