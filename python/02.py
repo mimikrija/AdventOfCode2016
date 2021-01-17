@@ -16,38 +16,51 @@ MOVE = { 'U': 0+1j, 'D': 0-1j,
          'R': 1+0j, 'L':-1+0j,
 }
 
-def convert_location_to_digit(in_location, keypad):
+
+def convert_coordinate_to_digit(coordinate, keypad):
+    """ returns button digit/letter in `keypad` given its `coordinate`"""
     for digit, location in keypad.items():
-        if in_location == location:
+        if coordinate == location:
             return digit
 
-def next_location(current_location, move, keypad):
-    new_location = current_location + MOVE[move]
-    if new_location not in keypad.values():
-        return current_location
+
+def translate_code(in_coords, keypad):
+    """ translates list of button coordinates `in_coords` into a code based on `keypad` used """
+    return "".join(convert_coordinate_to_digit(coordinate, keypad) for coordinate in in_coords)
+
+
+def next_coordinate(coordinate, move, keypad):
+    """ returns the next button coordinate `new_coordinate` given `coordinate`, `move` and `keypad`.
+    if the new coordinate is out of bounds of `keypad` we stay where we were. """
+    new_coordinate = coordinate + MOVE[move]
+    if new_coordinate not in keypad.values():
+        return coordinate
     else:
-        return new_location
+        return new_coordinate
 
-def get_digit(instruction, starting_number, keypad):
-    current_location = keypad[starting_number]
+
+def get_button(instruction, start, keypad):
+    """ returns button coordinate after executing the row of movements """
+    coordinate = start
     for move in instruction:
-        current_location = next_location(current_location, move, keypad)
-    return convert_location_to_digit(current_location, keypad)
+        coordinate = next_coordinate(coordinate, move, keypad)
+    return coordinate
 
-def get_code(instructions, keypad, start_from = '5'):
-    code = ''
-    current_digit = start_from
+
+def bathroom_code(instructions, keypad, start_button = '5'):
+    """ generates bathroom code following `instructions`, using `keypad` and starting from button `start_button` """
+    code_coordinates = []
+    button = keypad[start_button]
     for instruction in instructions:
-        next_digit = get_digit(instruction, current_digit, keypad)
-        code += next_digit
-        current_digit = next_digit
-    return code
+        button = get_button(instruction, button, keypad)
+        code_coordinates.append(button)
+    return translate_code(code_coordinates, keypad)
 
 
 instructions = helpers.get_input('inputs/02', '\n')
 
-part_1 = get_code(instructions, KEYPAD)
-part_2 = get_code(instructions, WACKY_KEYPAD)
+part_1 = bathroom_code(instructions, KEYPAD)
+part_2 = bathroom_code(instructions, WACKY_KEYPAD)
 
 print(part_1) # 99332
 print(part_2) # DD483
