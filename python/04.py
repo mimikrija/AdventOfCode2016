@@ -2,7 +2,10 @@
 
 import santas_little_helpers as helpers
 import re
-from collections import Counter
+from collections import Counter, namedtuple
+
+RoomData = namedtuple('RoomData', ['words', 'ID', 'checksum'])
+
 
 def top_five(encrypted_name):
     # first sort by alphabet, then by number of occurrences
@@ -11,20 +14,17 @@ def top_five(encrypted_name):
 
 
 def is_real_room(room):
-    encrypted_name = "".join(c for word in room[:-2] for c in word)
-    sector_ID = int(room[-2])
-    checksum = room[-1]
-    #print(top_five(encrypted_name))
-    if top_five(encrypted_name) == checksum:
-        return sector_ID
+    all_letters = "".join(c for word in room.words for c in word)
+    if top_five(all_letters) == room.checksum:
+        return room.ID
     else:
         return False
 
 
-rooms = [re.findall(r'\w+', line) for line in helpers.get_input('inputs/04', '\n')]
+raw_room_data = [re.findall(r'\w+', line) for line in helpers.get_input('inputs/04', '\n')]
+rooms = [ RoomData(raw_data[:-2], int(raw_data[-2]), raw_data[-1]) for raw_data in raw_room_data ]
 
 part_1 = sum(is_real_room(room) for room in rooms)
-
 
 
 def rotate_letter(c, number):
@@ -35,9 +35,9 @@ def rotate_letter(c, number):
     else:
         return chr(ord('a')+total-ord('z')-1)
 
-def decypher_name(room_data):
+def decypher_name(room):
     result = []
-    words, number = room_data[:-1], int(room_data[-1])
+    words, number = room.words, room.ID
     for word in words:
         new = ''.join( rotate_letter(c, number) for c in word)
         result.append(new)
@@ -46,9 +46,9 @@ def decypher_name(room_data):
 
 for room in rooms:
     if is_real_room(room):
-        new = decypher_name(room[:-1])
+        new = decypher_name(room)
         if 'object' in new:
-            part_2 = int(room[-2])
+            part_2 = room.ID
 
 helpers.print_solutions(part_1, part_2)
 # Part 1 solution is: 409147
