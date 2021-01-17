@@ -22,12 +22,9 @@ def is_real_room(room):
 
 
 def rotate_letter(c, amount):
+    wrap_around = lambda x: x if x <= ord('z') else x - 26
     offset = amount % 26
-    total = ord(c) + offset
-    if total <= ord('z'):
-        return chr(total)
-    else:
-        return chr(ord('a')+total-ord('z')-1)
+    return chr(wrap_around(ord(c) + offset))
 
 
 def decipher_name(room):
