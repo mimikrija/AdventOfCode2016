@@ -1,4 +1,5 @@
 # Day 3: Squares With Three Sides
+
 import santas_little_helpers as helpers
 import re
 
