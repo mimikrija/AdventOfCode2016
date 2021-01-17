@@ -21,8 +21,8 @@ def is_real_room(room):
         return False
 
 
-def rotate_letter(c, number):
-    offset = number % 26
+def rotate_letter(c, amount):
+    offset = amount % 26
     total = ord(c) + offset
     if total <= ord('z'):
         return chr(total)
