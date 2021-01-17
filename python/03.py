@@ -3,13 +3,9 @@ import santas_little_helpers as helpers
 import re
 
 is_triangle = lambda x: x[0] + x[1] > x[2]
-
+count_triangles = lambda x: sum(is_triangle(sorted(candidate)) for candidate in x)
 
 potential_triangles = [list(map(int, re.findall(r'\d+', line))) for line in helpers.get_input('inputs/03', '\n')]
-
-part_1 = sum(is_triangle(sorted(candidate)) for candidate in potential_triangles)
-
-
 
 potential_vertical = []
 for line_num in range(0, len(potential_triangles), 3):
@@ -17,7 +13,7 @@ for line_num in range(0, len(potential_triangles), 3):
         potential_vertical.append([potential_triangles[line_num + offset][n] for offset in range(0,3)])
 
 
-part_2 = sum(is_triangle(sorted(candidate)) for candidate in potential_vertical)
+part_1, part_2 = (count_triangles(potential) for potential in (potential_triangles, potential_vertical))
 
 helpers.print_solutions(part_1, part_2)
 # Part 1 solution is: 917
