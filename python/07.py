@@ -24,8 +24,7 @@ def is_valid(in_IP, is_part_2=False):
     if not is_part_2:
         if any(is_abba(hypernet_sequence) for hypernet_sequence in in_IP.hypernet_sequences):
             return False
-        if any(is_abba(word) for word in in_IP.words):
-            return True
+        return any(is_abba(word) for word in in_IP.words)
 
     if is_part_2:
         return any(bab in word for bab in bab_from_aba(in_IP.hypernet_sequences) for word in in_IP.words)
