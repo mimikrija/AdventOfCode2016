@@ -15,27 +15,29 @@ def lowest_positive(start_num, in_code, leading_zeroes):
     return number, hash_code[5], hash_code[6]
 
 
+def generate_password(input_string, is_part_2 = False):
+    password = [None for _ in range(8)]
+    pos = 0
+    start = 0
+    while any(char == None for char in password):
+        start, fifth_digit, sixth_digit = lowest_positive(start, my_input, 5)
+        if not is_part_2:
+            password[pos] = fifth_digit
+            pos += 1
+        else:
+            try:
+                pos = int(fifth_digit)
+                if pos < 8 and password[pos] == None:
+                    password[pos] = sixth_digit
+            except:
+                pass
+
+    return ''.join(char for char in password)
+
+
 my_input = "uqwqemis"
-start = 0
-part_1 = ''
-part_2 = [None for _ in range(8)]
 
-counter = 0
-
-while any(char == None for char in part_2):
-    start, pass_pos, pass_char = lowest_positive(start, my_input, 5)
-    try:
-        if int(pass_pos) < 8 and part_2[int(pass_pos)] == None:
-            part_2[int(pass_pos)] = pass_char
-    except:
-        continue
-
-print(''.join(c for c in part_2)) # 694190cd
-
-quit()
-for _ in range(8):
-    start, pass_char, _ = lowest_positive(start, my_input, 5)
-    part_1 += str(pass_char)
-
-helpers.print_solutions(part_1)
+part_1, part_2 = (generate_password(my_input, is_part_2) for is_part_2 in {False, True})
+helpers.print_solutions(part_1, part_2)
 # Part 1 solution is: 1a3099aa
+# Part 2 solution is: 694190cd
