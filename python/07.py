@@ -15,12 +15,9 @@ def is_abba(in_word):
 
 
 def bab_from_aba(in_word_list):
-    all_babs = set()
-    for in_word in in_word_list:
-        for first, second, third in zip(in_word, in_word[1:], in_word[2:]):
-            if first == third and first != second:
-                all_babs.add("".join(c for c in [second, first, second]))
-    return all_babs
+    return {"".join(c for c in [second, first, second]) for in_word in in_word_list
+                                                        for first, second, third in zip(in_word, in_word[1:], in_word[2:])
+                                                        if first == third and first != second}
 
 
 def is_valid(in_IP, is_part_2=False):
