@@ -38,11 +38,9 @@ def is_valid(in_IP, is_part_2=False):
     return False
 
 
-
-
-IPs = helpers.get_input('inputs/07', '\n')
+# parse input into a list of IPs
 all_IPs = []
-for line in IPs:
+for line in helpers.get_input('inputs/07', '\n'):
     hypernet_sequences = set(re.findall(r'\[([a-z]+)\]', line))
     only_words = set(re.findall(r'[a-z]+', line)) - hypernet_sequences
     ip = IP_data(only_words, hypernet_sequences)
@@ -50,8 +48,6 @@ for line in IPs:
 
 
 part_1, part_2 = (sum(is_valid(IP, is_part_2) for IP in all_IPs) for is_part_2 in (False, True))
-
-
 
 helpers.print_solutions(part_1, part_2)
 # Part 1 solution is: 110
