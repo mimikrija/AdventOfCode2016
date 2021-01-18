@@ -5,6 +5,9 @@ from collections import Counter
 
 
 def get_message(in_columns, is_part_2 = False):
+    # most_common Counter method returns a list of (key, count) tuples. we can get THE most common by calling it with arg 1,
+    # but getting the LEAST common requires some messing around because the least_common method doesn't exist (we just need to
+    # get the last element, hence the len(set()-1))
     most_or_least_common = lambda x: Counter(x).most_common(1)[0][0] if not is_part_2 else Counter(x).most_common()[len(set(x))-1][0]
     return "".join(c for c in (most_or_least_common(column) for column in in_columns))
 
