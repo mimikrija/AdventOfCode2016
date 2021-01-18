@@ -7,16 +7,16 @@ import re
 IP_data = namedtuple('IP_data', ['words', 'hypernet_sequences'])
 
 
-def is_abba(in_word):
-    for first, second, third, fourth in zip(in_word, in_word[1:], in_word[2:], in_word[3:]):
+def is_abba(word):
+    for first, second, third, fourth in zip(word, word[1:], word[2:], word[3:]):
         if first == fourth and second == third and first != second:
             return True
     return False
 
 
-def bab_from_aba(in_word_list):
-    return {"".join(c for c in [second, first, second]) for in_word in in_word_list
-                                                        for first, second, third in zip(in_word, in_word[1:], in_word[2:])
+def bab_from_aba(word_list):
+    return {"".join(c for c in [second, first, second]) for word in word_list
+                                                        for first, second, third in zip(word, word[1:], word[2:])
                                                         if first == third and first != second}
 
 
