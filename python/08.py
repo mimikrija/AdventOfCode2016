@@ -6,9 +6,9 @@ from collections import namedtuple
 
 Instruction = namedtuple('Instruction', ['command', 'num_1', 'num_2'])
 
-
 MAX_HORIZONTAL = 49
 MAX_VERTICAL = 5
+
 
 def rect(in_lights, row, column):
     return in_lights | {(x, y) for x in range(column) for y in range(row)}
@@ -37,10 +37,9 @@ def screen_lights_on(instructions):
     return lights_on
 
 
-def print_screen(instructions):
-    lights = sorted(screen_lights_on(instructions))
+def print_screen(lights):
     for row in range(MAX_VERTICAL+1):
-        line = [' ' for c in range (MAX_HORIZONTAL+1)]
+        line = (MAX_HORIZONTAL+1)*[' ']
         for x, y in lights:
             if x == row:
                 line[y] = '#'
@@ -55,11 +54,15 @@ for line in helpers.get_input('inputs/08', '\n'):
     else:
         instructions.append(Instruction(line.split(' ')[1], *map(int, re.findall(r'\d+', line))))
 
-part_1 = len(screen_lights_on(instructions))
+
+lights_on = screen_lights_on(instructions)
+part_1 = len(lights_on)
 
 helpers.print_solutions(part_1)
 # Part 1 solution is: 128
-print_screen(instructions) # EOARGPHYAO
+
+print('Part 2 solution is:')
+print_screen(lights_on) # EOARGPHYAO
 # ####  ##   ##  ###   ##  ###  #  # #   # ##   ##
 # #    #  # #  # #  # #  # #  # #  # #   ##  # #  #
 # ###  #  # #  # #  # #    #  # ####  # # #  # #  #
