@@ -34,7 +34,18 @@ def screen_lights_on(instructions):
     lights_on = set()
     for command, num_1, num_2 in instructions:
         lights_on = screen_commands[command](lights_on, num_1, num_2)
-    return len(lights_on)
+    return lights_on
+
+
+def print_screen(instructions):
+    lights = sorted(screen_lights_on(instructions))
+    for row in range(MAX_VERTICAL+1):
+        line = [' ' for c in range (MAX_HORIZONTAL+1)]
+        for x, y in lights:
+            if x == row:
+                line[y] = '#'
+        print (''.join(c for c in line))
+
 
 
 instructions = []
@@ -44,8 +55,14 @@ for line in helpers.get_input('inputs/08', '\n'):
     else:
         instructions.append(Instruction(line.split(' ')[1], *map(int, re.findall(r'\d+', line))))
 
-part_1 = screen_lights_on(instructions)
+part_1 = len(screen_lights_on(instructions))
 
 helpers.print_solutions(part_1)
 # Part 1 solution is: 128
-
+print_screen(instructions) # EOARGPHYAO
+# ####  ##   ##  ###   ##  ###  #  # #   # ##   ##
+# #    #  # #  # #  # #  # #  # #  # #   ##  # #  #
+# ###  #  # #  # #  # #    #  # ####  # # #  # #  #
+# #    #  # #### ###  # ## ###  #  #   #  #### #  #
+# #    #  # #  # # #  #  # #    #  #   #  #  # #  #
+# ####  ##  #  # #  #  ### #    #  #   #  #  #  ##
