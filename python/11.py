@@ -27,9 +27,9 @@ def items_allowed_on_this_floor(everything):
 def elevator_candidates(origin, destination):
     """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
     up on either `origin` or `destination`"""
-    return (combo for n in {1,2} for combo in itertools.combinations(origin, n)
-                if (items_allowed_on_this_floor(origin - set(combo))) and
-                    items_allowed_on_this_floor(set(combo) | destination))
+    return (elevator for n in {1,2} for elevator in itertools.combinations(origin, n)
+                if (items_allowed_on_this_floor(origin - set(elevator))) and
+                    items_allowed_on_this_floor(set(elevator) | destination))
 
 # example input
 input_state = [
