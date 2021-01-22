@@ -25,4 +25,11 @@ def items_allowed_on_this_floor(items, floor):
         return False
     return all_microchips_matched(generators, microchips)
 
+def elevator_candidates(origin, destination):
+    """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
+    up on either `origin` or `destination`"""
+    candidates = (combo for n in {1,2} for combo in itertools.combinations(origin, n)
+                if (items_allowed_on_this_floor(set(), origin - set(combo))) and
+                    items_allowed_on_this_floor(set(combo), destination))
+    return candidates
 
