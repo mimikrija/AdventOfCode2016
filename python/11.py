@@ -31,3 +31,14 @@ def elevator_candidates(origin, destination):
                 if (items_allowed_on_this_floor(origin - set(combo))) and
                     items_allowed_on_this_floor(set(combo) | destination))
 
+# example input
+input_state = [
+    ['HM', 'LM'],   # floor 1
+    ['HG'],         # floor 2
+    ['LG'],         # floor 3
+    [],             # floor 4
+]
+
+def solution_reached(state):
+    # all floors are empty except last
+    return not any(state[floor] != [] for floor in range(3))
