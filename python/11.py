@@ -7,9 +7,8 @@ MICROCHIPS = {'HM', 'LM'}
 def all_microchips_matched(generators, microchips):
     return all(any(generator[:-1] == microchip[:-1] for generator in generators) for microchip in microchips)
 
-def items_allowed_on_this_floor(items, floor):
-    """ checks whether all `items` in the elevator are compatible with thatever items are in `floor` """
-    everything = items | floor
+def items_allowed_on_this_floor(everything):
+    """ checks if `everything` combination is valid for a given floor """
     generators = everything & GENERATORS
     microchips = everything & MICROCHIPS
     # there are no generators, it is ok
@@ -28,8 +27,7 @@ def items_allowed_on_this_floor(items, floor):
 def elevator_candidates(origin, destination):
     """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
     up on either `origin` or `destination`"""
-    candidates = (combo for n in {1,2} for combo in itertools.combinations(origin, n)
-                if (items_allowed_on_this_floor(set(), origin - set(combo))) and
-                    items_allowed_on_this_floor(set(combo), destination))
-    return candidates
+    return (combo for n in {1,2} for combo in itertools.combinations(origin, n)
+                if (items_allowed_on_this_floor(origin - set(combo))) and
+                    items_allowed_on_this_floor(set(combo) | destination))
 
