@@ -35,7 +35,7 @@ def elevator_candidates(origin, destination):
                     items_allowed_on_this_floor(set(elevator) | destination))
 
 # example input
-input_state_example = State(['HM', 'LM'], ['HG'], ['LG'], [], 0, 0)
+input_state_example = State({'HM', 'LM'}, {'HG'}, {'LG'}, set(), 0, 0)
 
 # my input:
 # The first floor contains a polonium generator, a thulium generator, a thulium-compatible microchip, a promethium generator, a ruthenium generator, a ruthenium-compatible microchip,
@@ -43,8 +43,7 @@ input_state_example = State(['HM', 'LM'], ['HG'], ['LG'], [], 0, 0)
 # The second floor contains a polonium-compatible microchip and a promethium-compatible microchip.
 # The third floor contains nothing relevant.
 # The fourth floor contains nothing relevant.
-input_state = State(['PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM'] ,['PoM', 'PrM'], [], [], 0, 0)
-
+input_state = State({'PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM'} ,{'PoM', 'PrM'}, set(), set(), 0, 0)
 
 
 def solution_reached(state):
