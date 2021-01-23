@@ -30,9 +30,57 @@ def items_allowed_on_this_floor(everything):
 def elevator_candidates(origin, destination):
     """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
     up on either `origin` or `destination`"""
-    return (elevator for n in {1,2} for elevator in itertools.combinations(origin, n)
+    return (set(elevator) for n in {1,2} for elevator in itertools.combinations(origin, n)
                 if (items_allowed_on_this_floor(origin - set(elevator))) and
                     items_allowed_on_this_floor(set(elevator) | destination))
+
+
+def solution_reached(state):
+    # all floors are empty except last
+    return not any(state[floor] for floor in range(3))
+
+
+def generate_next_states(in_state):
+
+    in_first_floor, in_second_floor, in_third_floor, in_fourth_floor, elevator_at = in_state
+    output_states = []
+
+    # elevator on first floor
+    if elevator_at == 0:
+        #go up
+        for elevator in elevator_candidates(in_first_floor, in_second_floor):
+            output_states.append(State(in_first_floor - elevator, in_second_floor | elevator, in_third_floor, in_fourth_floor, elevator_at + 1))
+        return output_states
+
+    # elevator on second floor
+    if elevator_at == 1:
+        # go up
+        for elevator in elevator_candidates(in_second_floor, in_third_floor):
+            output_states.append(State(in_first_floor, in_second_floor - elevator, in_third_floor | elevator, in_fourth_floor, elevator_at + 1))
+        # go down
+        for elevator in elevator_candidates(in_second_floor, in_first_floor):
+            output_states.append(State(in_first_floor | elevator, in_second_floor - elevator, in_third_floor, in_fourth_floor, elevator_at - 1))
+        return output_states
+
+    # elevator on third floor
+    if elevator_at == 2:
+        # go up
+        for elevator in elevator_candidates(in_third_floor, in_fourth_floor):
+            output_states.append(State(in_first_floor, in_second_floor, in_third_floor  - elevator, in_fourth_floor | elevator, elevator_at + 1))
+        # go down
+        for elevator in elevator_candidates(in_third_floor, in_second_floor):
+            output_states.append(State(in_first_floor, in_second_floor | elevator, in_third_floor - elevator, in_fourth_floor, elevator_at - 1))
+        return output_states
+
+    # elevator on fourth floor
+    if elevator_at == 3:
+        # go down
+        for elevator in elevator_candidates(in_fourth_floor, in_third_floor):
+            output_states.append(State(in_first_floor, in_second_floor, in_third_floor | elevator, in_fourth_floor - elevator, elevator_at - 1))
+        return output_states
+
+
+
 
 # example input
 input_state_example = State({'HM', 'LM'}, {'HG'}, {'LG'}, set(), 0)
