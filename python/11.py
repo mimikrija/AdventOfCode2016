@@ -28,8 +28,7 @@ def items_allowed_on_this_floor(everything):
     return all_microchips_matched(generators, microchips)
 
 def elevator_candidates(origin, destination):
-    """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
-    up on either `origin` or `destination`"""
+    """ returns list of possible updated states of `origin` and `destination` after taking stuff with elevator"""
     return ((tuple(set(origin) - set(elevator)), tuple(set(elevator) | set(destination))) for n in {1,2} for elevator in itertools.combinations(origin, n)
                 if (items_allowed_on_this_floor(set(origin) - set(elevator))) and
                     items_allowed_on_this_floor(set(elevator) | set(destination)))
