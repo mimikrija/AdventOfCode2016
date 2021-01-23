@@ -94,23 +94,30 @@ input_state_example = State({'HM', 'LM'}, {'HG'}, {'LG'}, set(), 0)
 input_state = State({'PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM'} ,{'PoM', 'PrM'}, set(), set(), 0)
 
 
-def solution_reached(state):
-    # all floors are empty except last
-    return not any(state[floor] != [] for floor in range(3))
 
 
 def find_first_solution(in_state):
     """ breadth-first solution search. will return the number of steps needed to reach the first solution,
     starting from single initial state `in_state`. """
     solved = False
-    states = {in_state}
+    states = [in_state]
+    visited_states = states.copy()
     steps = 0
     while not solved:
-        temp_states = set()
+        temp_states = []
         for state in states:
             if solution_reached(state):
-                return steps
-            elif state:
-                temp_states |= generate_next_states(state)
+                return steps, state
+            else:
+                temp_states += [generated_state for generated_state in generate_next_states(state) if generated_state not in visited_states]
+
         steps += 1
         states = temp_states
+        visited_states += temp_states
+        # print(len(states), len(temp_states))
+
+
+# print(solution_reached(State(set(), set(), set(), {'HM', 'LM'}, 0)))
+
+print(find_first_solution(input_state_example))
+
