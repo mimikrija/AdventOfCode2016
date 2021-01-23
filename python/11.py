@@ -1,4 +1,7 @@
 import itertools
+from collections import namedtuple
+
+State = namedtuple('State',['first_floor', 'second_floor', 'third_floor', 'fourth_floor', 'elevator_at', 'total_steps'])
 
 GENERATORS = {'HG', 'LG'}
 MICROCHIPS = {'HM', 'LM'}
@@ -32,12 +35,17 @@ def elevator_candidates(origin, destination):
                     items_allowed_on_this_floor(set(elevator) | destination))
 
 # example input
-input_state = [
-    ['HM', 'LM'],   # floor 1
-    ['HG'],         # floor 2
-    ['LG'],         # floor 3
-    [],             # floor 4
-]
+input_state_example = State(['HM', 'LM'], ['HG'], ['LG'], [], 0, 0)
+
+# my input:
+# The first floor contains a polonium generator, a thulium generator, a thulium-compatible microchip, a promethium generator, a ruthenium generator, a ruthenium-compatible microchip,
+# a cobalt generator, and a cobalt-compatible microchip.
+# The second floor contains a polonium-compatible microchip and a promethium-compatible microchip.
+# The third floor contains nothing relevant.
+# The fourth floor contains nothing relevant.
+input_state = State(['PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM'] ,['PoM', 'PrM'], [], [], 0, 0)
+
+
 
 def solution_reached(state):
     # all floors are empty except last
