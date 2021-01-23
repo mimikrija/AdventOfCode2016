@@ -6,6 +6,8 @@ State = namedtuple('State',['first_floor', 'second_floor', 'third_floor', 'fourt
 GENERATORS = {'HG', 'LG'}
 MICROCHIPS = {'HM', 'LM'}
 
+GENERATORS = {'PoG', 'TG',  'PrG', 'RG', 'CG'}
+MICROCHIPS = {'TM', 'RM', 'CM', 'PrM'}
 
 def all_microchips_matched(generators, microchips):
     return all(any(generator[:-1] == microchip[:-1] for generator in generators) for microchip in microchips)
@@ -121,6 +123,6 @@ def find_first_solution(in_state):
 
 # print(solution_reached(State(set(), set(), set(), {'HM', 'LM'}, 0)))
 
-print(find_first_solution(input_state_example))
+print(find_first_solution(input_state))
 
 
