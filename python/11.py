@@ -112,12 +112,9 @@ def find_first_solution(in_state):
             else:
                 temp_states |= {new_state for new_state in generate_next_states(state) if new_state not in visited_states}
         visited_states |= temp_states
-        #print(temp_states)
-        #print(visited_states)
+
         steps += 1
-        states = set(temp_states)
-        
-        #print(states.pop())
+        states = temp_states
 
         print(len(states), len(visited_states))
 
