@@ -31,8 +31,8 @@ def elevator_candidates(origin, destination):
     """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
     up on either `origin` or `destination`"""
     return (set(elevator) for n in {1,2} for elevator in itertools.combinations(origin, n)
-                if (items_allowed_on_this_floor(origin - set(elevator))) and
-                    items_allowed_on_this_floor(set(elevator) | destination))
+                if (items_allowed_on_this_floor(set(origin) - set(elevator))) and
+                    items_allowed_on_this_floor(set(elevator) | set(destination)))
 
 
 def solution_reached(state):
@@ -43,47 +43,48 @@ def solution_reached(state):
 def generate_next_states(in_state):
 
     in_first_floor, in_second_floor, in_third_floor, in_fourth_floor, elevator_at = in_state
-    output_states = []
+
+    output_states = set()
 
     # elevator on first floor
     if elevator_at == 0:
         #go up
-        for elevator in elevator_candidates(in_first_floor, in_second_floor):
-            output_states.append(State(in_first_floor - elevator, in_second_floor | elevator, in_third_floor, in_fourth_floor, elevator_at + 1))
+        for elevator in elevator_candidates(set(in_first_floor), set(in_second_floor)):
+            output_states.add(State(tuple(set(in_first_floor) - elevator), tuple(set(in_second_floor) | elevator), in_third_floor, in_fourth_floor, elevator_at + 1))
         return output_states
 
     # elevator on second floor
     if elevator_at == 1:
         # go up
-        for elevator in elevator_candidates(in_second_floor, in_third_floor):
-            output_states.append(State(in_first_floor, in_second_floor - elevator, in_third_floor | elevator, in_fourth_floor, elevator_at + 1))
+        for elevator in elevator_candidates(set(in_second_floor), set(in_third_floor)):
+            output_states.add(State(in_first_floor, tuple(set(in_second_floor) - elevator), tuple(set(in_third_floor) | elevator), in_fourth_floor, elevator_at + 1))
         # go down
-        for elevator in elevator_candidates(in_second_floor, in_first_floor):
-            output_states.append(State(in_first_floor | elevator, in_second_floor - elevator, in_third_floor, in_fourth_floor, elevator_at - 1))
+        for elevator in elevator_candidates(set(in_second_floor), set(in_first_floor)):
+            output_states.add(State(tuple(set(in_first_floor) | elevator), tuple(set(in_second_floor) - elevator), in_third_floor, in_fourth_floor, elevator_at - 1))
         return output_states
 
     # elevator on third floor
     if elevator_at == 2:
         # go up
-        for elevator in elevator_candidates(in_third_floor, in_fourth_floor):
-            output_states.append(State(in_first_floor, in_second_floor, in_third_floor  - elevator, in_fourth_floor | elevator, elevator_at + 1))
+        for elevator in elevator_candidates(set(in_third_floor), set(in_fourth_floor)):
+            output_states.add(State(in_first_floor, in_second_floor, tuple(set(in_third_floor)  - elevator), tuple(set(in_fourth_floor) | elevator), elevator_at + 1))
         # go down
-        for elevator in elevator_candidates(in_third_floor, in_second_floor):
-            output_states.append(State(in_first_floor, in_second_floor | elevator, in_third_floor - elevator, in_fourth_floor, elevator_at - 1))
+        for elevator in elevator_candidates(set(in_third_floor), set(in_second_floor)):
+            output_states.add(State(in_first_floor, tuple(set(in_second_floor) | elevator), tuple(set(in_third_floor) - elevator), in_fourth_floor, elevator_at - 1))
         return output_states
 
     # elevator on fourth floor
     if elevator_at == 3:
         # go down
-        for elevator in elevator_candidates(in_fourth_floor, in_third_floor):
-            output_states.append(State(in_first_floor, in_second_floor, in_third_floor | elevator, in_fourth_floor - elevator, elevator_at - 1))
+        for elevator in elevator_candidates(set(in_fourth_floor), set(in_third_floor)):
+            output_states.add(State(in_first_floor, in_second_floor, tuple(set(in_third_floor) | elevator), tuple(set(in_fourth_floor) - elevator), elevator_at - 1))
         return output_states
 
 
 
 
 # example input
-input_state_example = State({'HM', 'LM'}, {'HG'}, {'LG'}, set(), 0)
+input_state_example = State(('HM', 'LM'), ('HG'), ('LG'), tuple(), 0)
 
 # my input:
 # The first floor contains a polonium generator, a thulium generator, a thulium-compatible microchip, a promethium generator, a ruthenium generator, a ruthenium-compatible microchip,
@@ -91,7 +92,7 @@ input_state_example = State({'HM', 'LM'}, {'HG'}, {'LG'}, set(), 0)
 # The second floor contains a polonium-compatible microchip and a promethium-compatible microchip.
 # The third floor contains nothing relevant.
 # The fourth floor contains nothing relevant.
-input_state = State({'PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM'} ,{'PoM', 'PrM'}, set(), set(), 0)
+input_state = State(('PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM') ,('PoM', 'PrM'), tuple(), tuple(), 0)
 
 
 
@@ -100,24 +101,24 @@ def find_first_solution(in_state):
     """ breadth-first solution search. will return the number of steps needed to reach the first solution,
     starting from single initial state `in_state`. """
     solved = False
-    states = [in_state]
-    visited_states = states.copy()
+    states = {in_state}
+
     steps = 0
     while not solved:
-        temp_states = []
+        temp_states = set()
         for state in states:
             if solution_reached(state):
                 return steps, state
             else:
-                temp_states += [generated_state for generated_state in generate_next_states(state) if generated_state not in visited_states]
+                temp_states |= generate_next_states(state)
 
         steps += 1
         states = temp_states
-        visited_states += temp_states
-        # print(len(states), len(temp_states))
+
+        print(len(states), len(temp_states))
 
 
 # print(solution_reached(State(set(), set(), set(), {'HM', 'LM'}, 0)))
 
-print(find_first_solution(input_state_example))
+print(find_first_solution(input_state))
 
