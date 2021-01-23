@@ -30,7 +30,7 @@ def items_allowed_on_this_floor(everything):
 def elevator_candidates(origin, destination):
     """ returns all elevator candidates (1, and 2 - tuples) which won't mess anything
     up on either `origin` or `destination`"""
-    return (set(elevator) for n in {1,2} for elevator in itertools.combinations(origin, n)
+    return ((tuple(set(origin) - set(elevator)), tuple(set(elevator) | set(destination))) for n in {1,2} for elevator in itertools.combinations(origin, n)
                 if (items_allowed_on_this_floor(set(origin) - set(elevator))) and
                     items_allowed_on_this_floor(set(elevator) | set(destination)))
 
@@ -49,42 +49,42 @@ def generate_next_states(in_state):
     # elevator on first floor
     if elevator_at == 0:
         #go up
-        for elevator in elevator_candidates(set(in_first_floor), set(in_second_floor)):
-            output_states.add(State(tuple(set(in_first_floor) - elevator), tuple(set(in_second_floor) | elevator), in_third_floor, in_fourth_floor, elevator_at + 1))
+        for new_first, new_second in elevator_candidates(in_first_floor, in_second_floor):
+            output_states.add(State(new_first, new_second, in_third_floor, in_fourth_floor, elevator_at + 1))
         return output_states
 
     # elevator on second floor
     if elevator_at == 1:
         # go up
-        for elevator in elevator_candidates(set(in_second_floor), set(in_third_floor)):
-            output_states.add(State(in_first_floor, tuple(set(in_second_floor) - elevator), tuple(set(in_third_floor) | elevator), in_fourth_floor, elevator_at + 1))
+        for new_second, new_third in elevator_candidates(in_second_floor, in_third_floor):
+            output_states.add(State(in_first_floor, new_second, new_third, in_fourth_floor, elevator_at + 1))
         # go down
-        for elevator in elevator_candidates(set(in_second_floor), set(in_first_floor)):
-            output_states.add(State(tuple(set(in_first_floor) | elevator), tuple(set(in_second_floor) - elevator), in_third_floor, in_fourth_floor, elevator_at - 1))
+        for new_second, new_first in elevator_candidates(in_second_floor, in_first_floor):
+            output_states.add(State(new_first, new_second, in_third_floor, in_fourth_floor, elevator_at - 1))
         return output_states
 
     # elevator on third floor
     if elevator_at == 2:
         # go up
-        for elevator in elevator_candidates(set(in_third_floor), set(in_fourth_floor)):
-            output_states.add(State(in_first_floor, in_second_floor, tuple(set(in_third_floor)  - elevator), tuple(set(in_fourth_floor) | elevator), elevator_at + 1))
+        for new_third, new_fourth in elevator_candidates(in_third_floor, in_fourth_floor):
+            output_states.add(State(in_first_floor, in_second_floor, new_third, new_fourth, elevator_at + 1))
         # go down
-        for elevator in elevator_candidates(set(in_third_floor), set(in_second_floor)):
-            output_states.add(State(in_first_floor, tuple(set(in_second_floor) | elevator), tuple(set(in_third_floor) - elevator), in_fourth_floor, elevator_at - 1))
+        for new_third, new_second in elevator_candidates(in_third_floor, in_second_floor):
+            output_states.add(State(in_first_floor, new_second, new_third, in_fourth_floor, elevator_at - 1))
         return output_states
 
     # elevator on fourth floor
     if elevator_at == 3:
         # go down
-        for elevator in elevator_candidates(set(in_fourth_floor), set(in_third_floor)):
-            output_states.add(State(in_first_floor, in_second_floor, tuple(set(in_third_floor) | elevator), tuple(set(in_fourth_floor) - elevator), elevator_at - 1))
+        for new_fourth, new_third in elevator_candidates(in_fourth_floor, in_third_floor):
+            output_states.add(State(in_first_floor, in_second_floor, new_third, new_fourth, elevator_at - 1))
         return output_states
 
 
 
 
 # example input
-input_state_example = State(('HM', 'LM'), ('HG'), ('LG'), tuple(), 0)
+input_state_example = State(('HM', 'LM'), ('HG',), ('LG',), tuple(), 0)
 
 # my input:
 # The first floor contains a polonium generator, a thulium generator, a thulium-compatible microchip, a promethium generator, a ruthenium generator, a ruthenium-compatible microchip,
@@ -102,6 +102,7 @@ def find_first_solution(in_state):
     starting from single initial state `in_state`. """
     solved = False
     states = {in_state}
+    visited_states = set(states)
 
     steps = 0
     while not solved:
@@ -110,15 +111,20 @@ def find_first_solution(in_state):
             if solution_reached(state):
                 return steps, state
             else:
-                temp_states |= generate_next_states(state)
-
+                temp_states |= {new_state for new_state in generate_next_states(state) if new_state not in visited_states}
+        visited_states |= temp_states
+        #print(temp_states)
+        #print(visited_states)
         steps += 1
-        states = temp_states
+        states = set(temp_states)
+        
+        #print(states.pop())
 
-        print(len(states), len(temp_states))
+        print(len(states), len(visited_states))
 
 
 # print(solution_reached(State(set(), set(), set(), {'HM', 'LM'}, 0)))
 
-print(find_first_solution(input_state))
+print(find_first_solution(input_state_example))
+
 
