@@ -3,19 +3,35 @@ from collections import namedtuple
 
 State = namedtuple('State',['first_floor', 'second_floor', 'third_floor', 'fourth_floor', 'elevator_at'])
 
-GENERATORS = {'HG', 'LG'}
-MICROCHIPS = {'HM', 'LM'}
+# example input
+input_state = State(('HM', 'LM'), ('HG',), ('LG',), tuple(), 0)
 
-GENERATORS = {'PoG', 'TG',  'PrG', 'RG', 'CG'}
-MICROCHIPS = {'TM', 'RM', 'CM', 'PrM'}
+# my input:
+# The first floor contains a polonium generator, a thulium generator, a thulium-compatible microchip, a promethium generator, a ruthenium generator, a ruthenium-compatible microchip,
+# a cobalt generator, and a cobalt-compatible microchip.
+# The second floor contains a polonium-compatible microchip and a promethium-compatible microchip.
+# The third floor contains nothing relevant.
+# The fourth floor contains nothing relevant.
+# input_state = State(('PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM') ,('PoM', 'PrM'), tuple(), tuple(), 0)
+
+
+all_generators = {item for floor in input_state[:-1] for item in floor if item[-1]=='G'}
+all_microchips = {item for floor in input_state[:-1] for item in floor if item[-1]=='M'}
+
+all_possible_elevators = (elevator for n in {1,2} for elevator in itertools.combinations(all_generators | all_microchips, n))
+
+
+def possible_elevator(in_floor, elevator_items):
+    return all(item in in_floor for item in elevator_items)
 
 def all_microchips_matched(generators, microchips):
     return all(any(generator[:-1] == microchip[:-1] for generator in generators) for microchip in microchips)
 
-def items_allowed_on_this_floor(everything):
+def items_allowed_on_this_floor(in_everything):
     """ checks if `everything` combination is valid for a given floor """
-    generators = everything & GENERATORS
-    microchips = everything & MICROCHIPS
+    everything = set(in_everything)
+    generators = everything & all_generators
+    microchips = everything & all_microchips
     # there are no generators, it is ok
     if not generators:
         return True
@@ -80,20 +96,6 @@ def generate_next_states(in_state):
         for new_fourth, new_third in elevator_candidates(in_fourth_floor, in_third_floor):
             output_states.add(State(in_first_floor, in_second_floor, new_third, new_fourth, elevator_at - 1))
         return output_states
-
-
-
-
-# example input
-input_state_example = State(('HM', 'LM'), ('HG',), ('LG',), tuple(), 0)
-
-# my input:
-# The first floor contains a polonium generator, a thulium generator, a thulium-compatible microchip, a promethium generator, a ruthenium generator, a ruthenium-compatible microchip,
-# a cobalt generator, and a cobalt-compatible microchip.
-# The second floor contains a polonium-compatible microchip and a promethium-compatible microchip.
-# The third floor contains nothing relevant.
-# The fourth floor contains nothing relevant.
-input_state = State(('PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM') ,('PoM', 'PrM'), tuple(), tuple(), 0)
 
 
 
