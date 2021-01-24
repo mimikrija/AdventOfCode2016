@@ -18,7 +18,7 @@ input_state = State(('HM', 'LM'), ('HG',), ('LG',), tuple(), 0)
 all_generators = {item for floor in input_state[:-1] for item in floor if item[-1]=='G'}
 all_microchips = {item for floor in input_state[:-1] for item in floor if item[-1]=='M'}
 
-all_possible_elevators = (elevator for n in {1,2} for elevator in itertools.combinations(all_generators | all_microchips, n))
+all_possible_elevators = set(elevator for n in {1,2} for elevator in itertools.combinations(all_generators | all_microchips, n))
 
 
 def possible_elevator(in_floor, elevator_items):
@@ -47,7 +47,7 @@ def items_allowed_on_this_floor(in_everything):
 
 def elevator_candidates(origin, destination):
     """ returns list of possible updated states of `origin` and `destination` after taking stuff with elevator"""
-    return ((tuple(set(origin) - set(elevator)), tuple(set(elevator) | set(destination))) for n in {1,2} for elevator in itertools.combinations(origin, n)
+    return set((tuple(sorted(set(origin) - set(elevator))), tuple(sorted(set(elevator) | set(destination)))) for n in {1,2} for elevator in itertools.combinations(origin, n)
                 if (items_allowed_on_this_floor(set(origin) - set(elevator))) and
                     items_allowed_on_this_floor(set(elevator) | set(destination)))
 
