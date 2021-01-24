@@ -110,21 +110,29 @@ def find_first_solution(in_state):
     steps = 0
     while not solved:
         temp_states = set()
-        for state in states:
-            if solution_reached(state):
-                return steps, state
-            else:
-                temp_states |= {new_state for new_state in generate_next_states(state) if new_state not in visited_states}
+        check_start = time.time()
+        if any(solution_reached(state) for state in states):
+                return steps
+        check_end = time.time()
+        print(f'checking time: {check_end-check_start}')
+        
+        temp_states_start = time.time()
+        temp_states = {new_state for state in states for new_state in generate_next_states(state) if new_state not in visited_states}
+        temp_states_end = time.time()
+        print(f'generating time: {temp_states_end-temp_states_start}')
+
         visited_states |= temp_states
 
         steps += 1
         states = temp_states
 
-        print(len(states), len(visited_states))
+        #print(len(states), len(visited_states))
 
 
 # print(solution_reached(State(set(), set(), set(), {'HM', 'LM'}, 0)))
-
+import time
+start = time.time()
 print(find_first_solution(input_state))
-
+end = time.time()
+print(end-start)
 
