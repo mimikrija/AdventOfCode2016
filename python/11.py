@@ -12,7 +12,11 @@ input_state = State(('HM', 'LM'), ('HG',), ('LG',), tuple(), 0)
 # The second floor contains a polonium-compatible microchip and a promethium-compatible microchip.
 # The third floor contains nothing relevant.
 # The fourth floor contains nothing relevant.
-# input_state = State(('PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM') ,('PoM', 'PrM'), tuple(), tuple(), 0)
+# part 1
+input_state = State(('PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM') ,('PoM', 'PrM'), tuple(), tuple(), 0)
+
+# part 2
+input_state = State(('PoG', 'TG', 'TM', 'PrG', 'RG', 'RM', 'CG', 'CM','EM','EG','DG','DM') ,('PoM', 'PrM'), tuple(), tuple(), 0)
 
 
 all_generators = {item for floor in input_state[:-1] for item in floor if item[-1]=='G'}
@@ -45,11 +49,21 @@ def items_allowed_on_this_floor(in_everything):
         return False
     return all_microchips_matched(generators, microchips)
 
-def elevator_candidates(origin, destination):
+def elevator_candidates(in_origin, in_destination):
     """ returns list of possible updated states of `origin` and `destination` after taking stuff with elevator"""
-    return set((tuple(sorted(set(origin) - set(elevator))), tuple(sorted(set(elevator) | set(destination)))) for n in {1,2} for elevator in itertools.combinations(origin, n)
-                if (items_allowed_on_this_floor(set(origin) - set(elevator))) and
-                    items_allowed_on_this_floor(set(elevator) | set(destination)))
+    origin = set(in_origin)
+    destination = set(in_destination)
+    # out_candidates = set()
+    # for n in {1,2}:
+    #     for elevator in itertools.combinations(origin, n):
+    #         out_origin = tuple(sorted(origin - set(elevator)))
+    #         out_destination = tuple(sorted(set(elevator) | destination))
+    #         if items_allowed_on_this_floor(out_origin) and items_allowed_on_this_floor(out_destination):
+    #             out_candidates.add((out_origin, out_destination))
+    # return out_candidates
+    return set((tuple(sorted(origin - set(elevator))), tuple(sorted(set(elevator) | destination))) for n in {1,2} for elevator in itertools.combinations(origin, n)
+                if (items_allowed_on_this_floor(origin - set(elevator))) and
+                    items_allowed_on_this_floor(set(elevator) | destination))
 
 
 def solution_reached(state):
@@ -114,7 +128,7 @@ def find_first_solution(in_state):
         if any(solution_reached(state) for state in states):
                 return steps
         check_end = time.time()
-        print(f'checking time: {check_end-check_start}')
+        #print(f'checking time: {check_end-check_start}')
         
         temp_states_start = time.time()
         temp_states = {new_state for state in states for new_state in generate_next_states(state) if new_state not in visited_states}
@@ -126,7 +140,7 @@ def find_first_solution(in_state):
         steps += 1
         states = temp_states
 
-        #print(len(states), len(visited_states))
+        print(len(states), len(visited_states))
 
 
 # print(solution_reached(State(set(), set(), set(), {'HM', 'LM'}, 0)))
@@ -136,3 +150,5 @@ print(find_first_solution(input_state))
 end = time.time()
 print(end-start)
 
+# 47 part 1
+# 71 part 2
