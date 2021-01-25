@@ -89,7 +89,10 @@ def generate_next_states(in_state):
         # go up
         for new_second, new_third in elevator_candidates(in_second_floor, in_third_floor):
             output_states.add(State(in_first_floor, new_second, new_third, in_fourth_floor, elevator_at + 1))
-        # go down
+        # go down, but only if there's still stuff left on first floor to take
+        # if not, return so we reduce the number of possible states
+        if not in_first_floor:
+            return output_states
         for new_second, new_first in elevator_candidates(in_second_floor, in_first_floor):
             output_states.add(State(new_first, new_second, in_third_floor, in_fourth_floor, elevator_at - 1))
         return output_states
