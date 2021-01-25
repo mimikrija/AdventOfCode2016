@@ -4,6 +4,9 @@ import santas_little_helpers as helpers
 import re
 from collections import namedtuple, deque
 
+count_giver_vals = lambda x: len(bot.get(x.giver_key, []))
+
+
 Receiver = namedtuple('Receiver', ['object', 'key'])
 Transaction = namedtuple('Transaction', ['giver_key', 'receiver_high', 'receiver_low'])
 
@@ -32,13 +35,19 @@ for instruction in instructions:
         receiver_low, receiver_low_key = second.split(' ')
         receiver_high, receiver_high_key = third.split(' ')
         # generate a Transaction object and append it to the transaction queue
-        transactions.append(Transaction(giver_key, Receiver(receiver_high, int(receiver_high_key)), Receiver(receiver_low, int(receiver_low_key))))
+        transaction = Transaction(giver_key, Receiver(receiver_high, int(receiver_high_key)), Receiver(receiver_low, int(receiver_low_key)))
+        transactions.append(transaction)
 
+total_transactions = len(transactions)
 
+transactions = deque(sorted(transactions, key=count_giver_vals))
+
+number_of_steps = 0
 while transactions:
     transaction = transactions.pop()
+    number_of_steps += 1
     chips = bot.get(transaction.giver_key, [])
-    if len(chips) == 2:
+    if count_giver_vals(transaction) == 2:
         for receiver, value in zip((transaction.receiver_high, transaction.receiver_low), sorted(chips, reverse=True)):
             # append value to the list of values already present (if no values present, empty list is the default value)
             if receiver.object == 'bot':
@@ -46,15 +55,23 @@ while transactions:
             else: # receiver is 'output'
                 output[receiver.key] = output.get(receiver.key, []) + [value]
     else:
-        # this transaction is not solvable yet (at least one value missing), so just put it at the back of the queue
-        # I guess it would make sense here to use a priority queue so that items with two chips go first, items with one chip second and empty items last
-        # but this was very fast even without that
+        # this transaction is not solvable yet (at least one value missing), so just put it in the back of the queue
         transactions.appendleft(transaction)
+
+    # "prioritize" the queue based on givers who have most values defined
+    transactions = deque(sorted(transactions, key=count_giver_vals))
+
+# but who knows, maybe something to think about?
+print(f'number of steps needed was {number_of_steps}, and there were a total of {total_transactions} instructions, excluding initializations.')
+# number of steps needed was 2563, and there were a total of 210 instructions, excluding initializations.
+# with sort:
+# number of steps needed was 210, and there were a total of 210 instructions, excluding initializations.
 
 for bot_num, chips in bot.items():
     if all(num in chips for num in {17, 61}):
         part_1 = bot_num
         break
+
 
 part_2 = output[0][0]*output[1][0]*output[2][0]
 
