@@ -3,6 +3,8 @@
 import santas_little_helpers as helpers
 import re
 from collections import namedtuple, deque
+from functools import reduce
+from operator import mul
 
 count_giver_vals = lambda x: len(bot.get(x.giver_key, []))
 
@@ -72,8 +74,8 @@ for bot_num, chips in bot.items():
         part_1 = bot_num
         break
 
-
-part_2 = output[0][0]*output[1][0]*output[2][0]
+# part 2: multiply values of outputs 0, 1, and 0
+part_2 = reduce(mul, (output[n][0] for n in {0, 1, 2}))
 
 helpers.print_solutions(part_1, part_2)
 # Part 1 solution is: 141
