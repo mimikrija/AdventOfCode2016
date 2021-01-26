@@ -11,5 +11,7 @@ def is_open(in_coordinate):
 
 
 # What is the fewest number of steps required for you to reach 31,39? (starting from 1,1)
+start = (1,1)
+
 goal = (31, 39)
 goal = (7, 4) # example
