@@ -51,6 +51,25 @@ def path_length(start, end):
     return len(path)
 
 
+def BFS_visit_everything(start, steps):
+    frontier = deque()
+    # we add a set of rings that make up a frontier. each frontier is one ring/step
+    frontier.append({start})
+    reached = set()
+    reached.add(start)
+    count = 0
+
+    while frontier:
+        current_frontier = frontier.pop()
+        count += 1
+        next_frontier = {next_position for current_position in current_frontier for next_position in neighbors(current_position) if next_position not in reached}
+        frontier.append(next_frontier)
+        reached |= next_frontier
+        if count == steps:
+            return len(reached)
+
+
+
 # What is the fewest number of steps required for you to reach 31,39? (starting from 1,1)
 start = (1,1)
 
@@ -58,5 +77,8 @@ goal = (31, 39)
 #goal = (7, 4) # example
 
 part_1 = path_length(start, goal)
-print_solutions(part_1)
+part_2 = BFS_visit_everything(start, 50)
+
+print_solutions(part_1, part_2)
 # Part 1 solution is: 96
+# Part 2 solution is: 141
