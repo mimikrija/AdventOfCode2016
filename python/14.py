@@ -37,18 +37,19 @@ def generate_hash(start_num, condition, limit=None, character=''):
         if limit and number > limit:
             return False
 
-    #return number
 
-number = 0
-counter = 0
-while True:
-    number, _, character = generate_hash(number, has_three_consec_characters)
-    if generate_hash(number, has_five_consec_characters, number+1000, character):
-        counter += 1
-        # print(f'{counter}th number is {number}')
-    if counter == 64:
-        part_1 = number
-        break
+def find_sixtyfourth_index():
+    number = 0
+    counter = 0
+    while True:
+        number, _, character = generate_hash(number, has_three_consec_characters)
+        if generate_hash(number, has_five_consec_characters, number+1000, character):
+            counter += 1
+            # print(f'{counter}th number is {number}')
+        if counter == 64:
+            return number
 
+
+part_1 = find_sixtyfourth_index()
 print_solutions(part_1)
 # Part 1 solution is: 15035
