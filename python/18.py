@@ -3,21 +3,15 @@
 from santas_little_helpers import *
 
 
-def is_safe(left, center, right):
-    if left == center == '^' and right == '.':
-        return '^'
-    if center == right =='^' and left == '.':
-        return '^'
-    if left =='^' and center == right == '.':
-        return '^'
-    if right =='^' and center == left == '.':
-        return '^'
-    return '.'
+def is_safe(left, right):
+    if left == right:
+        return '.'
+    return '^'
 
 
 def generate_next_row(in_row):
     above_row = ['.'] + in_row + ['.']
-    return [is_safe(one, two, three) for one, two, three in zip(above_row, above_row[1:], above_row[2:])]
+    return [is_safe(one, three) for one, three in zip(above_row, above_row[2:])]
 
 
 def generate_map(in_row, total_rows):
