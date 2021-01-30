@@ -14,16 +14,13 @@ def generate_next_row(in_row):
     return [is_safe(one, three) for one, three in zip(above_row, above_row[2:])]
 
 
-def generate_map(in_row, total_rows):
-    whole_map = [in_row]
+def count_safe(in_row, total_rows):
+    next_row = list(in_row)
+    count = next_row.count('.')
     for _ in range(total_rows-1):
-        new_row = generate_next_row(whole_map[-1])
-        whole_map.append(new_row)
-    return whole_map
-
-
-def count_safe(in_map):
-    return sum(c == '.' for line in in_map for c in line)
+        next_row = generate_next_row(next_row)
+        count += next_row.count('.')
+    return count
 
 
 first_row = [c for c in get_input('inputs/18')[0]]
