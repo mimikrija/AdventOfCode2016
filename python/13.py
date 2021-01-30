@@ -4,14 +4,11 @@ from santas_little_helpers import *
 from collections import deque
 import itertools
 
-my_input = 1358
-#my_input = 10 # example
-
 
 def is_open(in_coordinate):
     "returns `True` if `in_coordinate` is open, and `False` if it is a wall"
     x, y = in_coordinate
-    ones = bin(x*x + 3*x + 2*x*y + y + y*y + my_input).count('1')
+    ones = bin(x*x + 3*x + 2*x*y + y + y*y + DESIGNER_NUMBER).count('1')
     return ones % 2 == 0
 
 
@@ -74,14 +71,14 @@ def BFS_visit_everything(start, steps):
             return len(reached)
 
 
+DESIGNER_NUMBER = 1358
 
-# What is the fewest number of steps required for you to reach 31,39? (starting from 1,1)
 start = (1,1)
-
 goal = (31, 39)
-#goal = (7, 4) # example
 
+# Part 1: What is the fewest number of steps required for you to reach 31,39? (starting from 1,1)
 part_1 = path_length(start, goal)
+# Part 2: How many locations (distinct x,y coordinates, including your starting location) can you reach in at most 50 steps?
 part_2 = BFS_visit_everything(start, 50)
 
 print_solutions(part_1, part_2)
