@@ -16,12 +16,12 @@ def find_lowest_allowed(in_forbidden, start=0):
 
 def count_allowed(in_forbidden, limit=4294967295):
     lowest_allowed = 0
-    allowed = []
+    counter = 0
     while True:
         lowest_allowed = find_lowest_allowed(in_forbidden, lowest_allowed+1)
         if lowest_allowed > limit:
-            return len(allowed)
-        allowed.append(lowest_allowed)
+            return counter
+        counter += 1
 
 
 part_1 = find_lowest_allowed(ranges)
