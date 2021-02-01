@@ -48,8 +48,16 @@ def scramble(command, args, in_string):
 instructions = []
 for line in get_input('inputs/21'):
     command = ' '.join(word for word in line.split(' ')[:2])
-    args = (word for word in line.split(' ') if len(word) == 1)
+    args = [word for word in line.split(' ') if len(word) == 1]
     if command in ('move position', 'reverse positions', 'swap position', 'rotate left', 'rotate right'):
-        instructions.append(Instruction(command, map(int, args)))
+        instructions.append(Instruction(command, list(map(int, args))))
     if command in ('swap letter', 'rotate based'):
         instructions.append(Instruction(command, args))
+
+my_input = 'abcdefgh'
+part_1 = my_input
+for instruction in instructions:
+    part_1 = scramble(*instruction, part_1)
+
+print_solutions(part_1)
+# Part 1 solution is: dgfaehcb
