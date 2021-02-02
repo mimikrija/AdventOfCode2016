@@ -13,6 +13,8 @@ def swap_letter(in_string, letter_1, letter_2):
     return in_string.translate(str.maketrans(letter_1+letter_2, letter_2+letter_1))
 
 def rotate(in_string, rotate_by):
+    """ rotates `in_string` by `rotate_by`. If `rotate_by` is positive it is
+    the same as "rotate right", otherwise it is the same as "rotate left" """
     return in_string[-rotate_by:] + in_string[:-rotate_by]
 
 def rotate_based(in_string, letter):
@@ -28,7 +30,7 @@ def move_position(in_string, pos_1, pos_2):
     remainder = in_string[:pos_1] + in_string[pos_1+1:]
     return remainder[:pos_2] + letter + remainder[pos_2:]
 
-def scramble(command, args, in_string):
+def single_scramble(command, args, in_string):
     if command == 'swap position':
         return swap_position(in_string, *sorted(args))
     if command == 'swap letter':
@@ -44,6 +46,12 @@ def scramble(command, args, in_string):
     if command == 'move position':
         return move_position(in_string, *args)
 
+def scramble(in_string, instructions):
+    scrambled = in_string
+    for instruction in instructions:
+        scrambled = single_scramble(*instruction, scrambled)
+    return scrambled
+
 
 instructions = []
 for line in get_input('inputs/21'):
@@ -54,10 +62,7 @@ for line in get_input('inputs/21'):
     if command in ('swap letter', 'rotate based'):
         instructions.append(Instruction(command, args))
 
-my_input = 'abcdefgh'
-part_1 = my_input
-for instruction in instructions:
-    part_1 = scramble(*instruction, part_1)
+part_1 = scramble('abcdefgh', instructions)
 
 print_solutions(part_1)
 # Part 1 solution is: dgfaehcb
