@@ -3,6 +3,7 @@
 from santas_little_helpers import *
 from re import findall
 from collections import namedtuple
+from itertools import permutations
 
 Instruction = namedtuple('Instruction',['command', 'args'])
 
@@ -52,6 +53,13 @@ def scramble(in_string, instructions):
         scrambled = single_scramble(*instruction, scrambled)
     return scrambled
 
+def find_unscrambled(in_scrambled, instructions):
+    for unscrambled in permutations(in_scrambled):
+        candidate = ''.join(c for c in unscrambled)
+        candidate = scramble(candidate, instructions)
+        if candidate == in_scrambled:
+            return candidate
+
 
 instructions = []
 for line in get_input('inputs/21'):
@@ -62,7 +70,10 @@ for line in get_input('inputs/21'):
     if command in ('swap letter', 'rotate based'):
         instructions.append(Instruction(command, args))
 
-part_1 = scramble('abcdefgh', instructions)
 
-print_solutions(part_1)
+part_1 = scramble('abcdefgh', instructions)
+part_2 = find_unscrambled('fbgdceah', instructions)
+
+print_solutions(part_1, part_2)
 # Part 1 solution is: dgfaehcb
+# Part 2 solution is: fbgdceah
