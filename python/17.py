@@ -8,7 +8,11 @@ GRID = {complex(x, y) for x, y in product(range(4), repeat=2)}
 start = 0+0j
 vault = 3_3j
 
-
+MOVE = {'U':  0-1j,
+        'D':  0+1j,
+        'L': -1+0j,
+        'R':  1+0j,
+        }
 
 
 def paths_from_here(passcode, path):
