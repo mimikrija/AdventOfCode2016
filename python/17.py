@@ -3,10 +3,11 @@
 from santas_little_helpers import *
 from hashlib import md5
 from itertools import product
+from collections import deque
 
 GRID = {complex(x, y) for x, y in product(range(4), repeat=2)}
 start = 0+0j
-vault = 3_3j
+vault = 3+3j
 
 MOVE = {'U':  0-1j,
         'D':  0+1j,
