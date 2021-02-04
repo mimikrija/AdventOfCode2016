@@ -26,29 +26,35 @@ def open_neighbors(position, paths_from_coord):
     return {(position + MOVE[direction], direction) for direction in paths_from_coord if position + MOVE[direction] in GRID}
 
 
-def BFS_shortest_distance(passcode, start, end):
+def BFS_shortest_distance(passcode, start, end, is_part_two=False):
     "Red blob games BFS with shortest distance from `start` to `end` implementation"
     frontier = deque()
     frontier.append((start, []))
     came_from = dict()
     came_from[start] = None
-    counter = 0
+    longest_path_length = 0
     while frontier:
-        counter += 1
         current_position, path_so_far = frontier.pop()
         possible_paths = paths_from_here(passcode, path_so_far)
         if possible_paths:
             for next_position, direction in open_neighbors(current_position, possible_paths):
-                frontier.appendleft((next_position, path_so_far + [direction]))
-                came_from[next_position] = current_position
                 # early exit if we found the goal (end) point
                 if next_position == end:
-                    return ''.join(c for c in path_so_far + [direction])
+                    if not is_part_two:
+                        return ''.join(c for c in path_so_far + [direction])
+                    else:
+                        longest_path_length = max(longest_path_length, len(path_so_far)+1)
+                else:
+                    frontier.appendleft((next_position, path_so_far + [direction]))
+                    came_from[next_position] = current_position
+    return longest_path_length
 
 
 passcode = 'bwnlcvfs'
 
 
-part_1 = BFS_shortest_distance(passcode, start, vault)
-print_solutions(part_1)
+
+part_1, part_2 = (BFS_shortest_distance(passcode, start, vault, is_part_two) for is_part_two in {False, True})
+print_solutions(part_1, part_2)
 # Part 1 solution is: DDURRLRRDD
+# Part 2 solution is: 436
