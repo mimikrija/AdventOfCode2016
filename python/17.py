@@ -23,6 +23,7 @@ def paths_from_here(passcode, path_so_far):
 
 
 def open_neighbors(position, paths_from_coord):
+    "returns a set of `position`'s neighbors in a form of a tupple `(position, direction)` constructed from `paths_from_coord`."
     return {(position + MOVE[direction], direction) for direction in paths_from_coord if position + MOVE[direction] in GRID}
 
 
