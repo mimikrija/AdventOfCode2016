@@ -5,6 +5,12 @@ from math import log
 
 total_elves = 3014387
 
+def josephus_winner(circle_size):
+    "returns the solution of the Josephus problem as explained by Numberphile for `circle_size`"
+    # https://www.youtube.com/watch?v=uCsD3ZGzMgE
+    binary_circle = format(circle_size, 'b')
+    return int(binary_circle[1:] + binary_circle[:1], 2)
+
 
 def joseph(in_circle):
     if len(in_circle) == 1:
