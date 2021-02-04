@@ -26,27 +26,25 @@ def open_neighbors(position, paths_from_coord):
     return {(position + MOVE[direction], direction) for direction in paths_from_coord if position + MOVE[direction] in GRID}
 
 
-def BFS_shortest_distance(passcode, start, end, is_part_two=False):
-    "Red blob games BFS with shortest distance from `start` to `end` implementation"
+def BFS_path(passcode, start, end, is_part_two=False):
+    "Attempts to visit all possible locations from `start` to `end` given a `passcode`. Early exit for first found location (shortest distance) if `is_part_two` is not provided"
     frontier = deque()
     frontier.append((start, []))
-    came_from = dict()
-    came_from[start] = None
     longest_path_length = 0
+
     while frontier:
         current_position, path_so_far = frontier.pop()
         possible_paths = paths_from_here(passcode, path_so_far)
-        if possible_paths:
+        if possible_paths: # only proceed if this position is not a dead end, ie. possible_paths has at least one element
             for next_position, direction in open_neighbors(current_position, possible_paths):
-                # early exit if we found the goal (end) point
+
                 if next_position == end:
                     if not is_part_two:
                         return ''.join(c for c in path_so_far + [direction])
                     else:
                         longest_path_length = max(longest_path_length, len(path_so_far)+1)
                 else:
-                    frontier.appendleft((next_position, path_so_far + [direction]))
-                    came_from[next_position] = current_position
+                    frontier.appendleft((next_position, path_so_far+[direction]))
     return longest_path_length
 
 
@@ -54,7 +52,7 @@ passcode = 'bwnlcvfs'
 
 
 
-part_1, part_2 = (BFS_shortest_distance(passcode, start, vault, is_part_two) for is_part_two in {False, True})
+part_1, part_2 = (BFS_path(passcode, start, vault, is_part_two) for is_part_two in {False, True})
 print_solutions(part_1, part_2)
 # Part 1 solution is: DDURRLRRDD
 # Part 2 solution is: 436
