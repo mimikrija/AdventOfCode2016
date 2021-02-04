@@ -1,3 +1,5 @@
+# Day 15: Timing is Everything
+
 from santas_little_helpers import *
 import re
 from math import lcm
@@ -38,54 +40,42 @@ disks = (map(int, re.findall(r'\d+', line)) for line in get_input('inputs/15'))
 # disc 2 offset is 1 + 2 = 3 which wraps around to 1
 
 
-disks_and_offsets = {disk_period: add_wrap(start_pos, disk_no, disk_period-1)
+disks_and_offsets_pt1 = {disk_period: add_wrap(start_pos, disk_no, disk_period-1)
                                 for disk_no, disk_period, _, start_pos in disks}
 
+# part 2, add disk no. 7
+disks_and_offsets_pt2 = dict(disks_and_offsets_pt1)
+disk_no, disk_period, _, start_pos = map(int, re.findall(r'\d+', 'Disc #7 has 11 positions; at time=0, it is at position 0.'))
+disks_and_offsets_pt2[disk_period] = add_wrap(start_pos, disk_no, disk_period-1)
 
-def first_overlap(time_start, period_1, offset_1, period_2, offset_2, time_step):
-    # if time_start == 0:
-    #     time_step = period_1
-    # else:
-    #     time_step = lcm(period_1, period_2)
-    for time in range (time_start, period_1*period_2*time_step + 1, time_step):
+
+def first_overlap(time_start, period_1, offset_1, period_2, offset_2, in_time_step):
+    """ given `time_start` returns the next `time` and `period` for which it holds
+    that both `time + offset_1` divided by `period_1` and `time + offset_2` divided by
+    `period_2` have no remainders. Such a constelation will be valid for `time`,
+    `time + period`, `time + 2 period`, etc. """
+    for time in range(time_start, lcm(period_1,period_2)*in_time_step + 1, in_time_step):
         if (time + offset_1) % period_1 == 0 and (time + offset_2) % period_2 == 0:
-            return time
+            return time, lcm(in_time_step, period_2)
 
 
 
 def find_overlap_all(in_periods_and_offsets):
+    "combines `first_overlap` procedure for a set of periods and offsets (divisors and remainders)"
     # the most important thing with this approach is to have periods and offsets sorted
     # by the offsets
-    # periods_and_offsets = sorted(in_periods_and_offsets.items(), key=lambda x: x[1])
-    # print(periods_and_offsets)
-    # time = 0
-    # period = periods_and_offsets[0][0]
-    # for first, second in zip(periods_and_offsets, periods_and_offsets[1:]):
-    #     print(first, second)
-    #     time = first_overlap(time, *first, *second, period)
-    #     period *= second[1] # this should be LCM, but since they're all prime it's the same thing
-
-    # return time
-    bus_IDs, time_diffs = zip(*sorted(in_periods_and_offsets.items(), key=lambda x: x[1]))
+    periods_and_offsets = sorted(in_periods_and_offsets.items(), key=lambda x: x[1])
+    # initialize values:
     time = 0
-    period = bus_IDs[0]
-    for n in range(len(bus_IDs)-1):
-        b_1 = bus_IDs[n]
-        b_2 = bus_IDs[n+1]
-        d_1 = time_diffs[n]
-        d_2 = time_diffs[n+1]
-        time = first_overlap(time, b_1, d_1, b_2,d_2, period)
-        period = lcm(period,b_2) # this should be LCM, but since they're all prime it's the same thing
+    period = periods_and_offsets[0][0]
+    for first, second in zip(periods_and_offsets, periods_and_offsets[1:]):
+        time, period = first_overlap(time, *first, *second, period)
     return time
 
-part_1 = find_overlap_all(disks_and_offsets)
 
 
-# part 2, add disk no. 7
-disk_no, disk_period, _, start_pos = map(int, re.findall(r'\d+', 'Disc #7 has 11 positions; at time=0, it is at position 0.'))
-disks_and_offsets[disk_period] = add_wrap(start_pos, disk_no, disk_period-1)
 
-part_2 = find_overlap_all(disks_and_offsets)
+part_1, part_2 = (find_overlap_all(disks_and_offsets) for disks_and_offsets in (disks_and_offsets_pt1, disks_and_offsets_pt2))
 print_solutions(part_1, part_2)
 # Part 1 solution is: 148737
 # Part 2 solution is: 2353212

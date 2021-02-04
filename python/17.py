@@ -37,19 +37,18 @@ def BFS_path(passcode, start, end, is_part_two=False):
         possible_paths = paths_from_here(passcode, path_so_far)
         if possible_paths: # only proceed if this position is not a dead end, ie. possible_paths has at least one element
             for next_position, direction in open_neighbors(current_position, possible_paths):
-
+                new_path = path_so_far + [direction]
                 if next_position == end:
                     if not is_part_two:
-                        return ''.join(c for c in path_so_far + [direction])
+                        return ''.join(c for c in new_path)
                     else:
-                        longest_path_length = max(longest_path_length, len(path_so_far)+1)
-                else:
-                    frontier.appendleft((next_position, path_so_far+[direction]))
+                        longest_path_length = max(longest_path_length, len(new_path))
+                else: # only append to frontier if we haven't found the end point (otherwise we get an endless loop)
+                    frontier.appendleft((next_position, new_path))
     return longest_path_length
 
 
 passcode = 'bwnlcvfs'
-
 
 
 part_1, part_2 = (BFS_path(passcode, start, vault, is_part_two) for is_part_two in {False, True})
