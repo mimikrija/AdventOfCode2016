@@ -9,11 +9,10 @@ total_elves = 3014387
 def joseph(in_circle):
     if len(in_circle) == 1:
         return in_circle[0]
+    if len(in_circle) % 2 == 1:
+        return joseph(in_circle[::2][1:])
     else:
-        if len(in_circle) % 2 == 1:
-            return joseph(in_circle[::2][1:])
-        else:
-            return joseph(in_circle[::2])
+        return joseph(in_circle[::2])
 
 
 def joseph_accross(in_circle):
@@ -23,6 +22,16 @@ def joseph_accross(in_circle):
     else:
         midway = size // 2
         return joseph_accross(in_circle[1:midway]+in_circle[midway+1:] + in_circle[:1])
+
+
+def joseph_formula(size):
+    highest_power = int(log(size, 2)) # a
+    last_2_to_the_nth = 2**highest_power # 3^a
+    rest = size - last_2_to_the_nth # l
+    if rest == 0:
+        return 1
+    else:
+        return 2*rest + 1
 
 
 def joseph_accross_formula(size):
@@ -46,9 +55,7 @@ def joseph_accross_formula(size):
 
 
 
-
-elves_circle = list(range(1,total_elves+1))
-part_1 = joseph(elves_circle)
+part_1 = joseph_formula(total_elves)
 part_2 = joseph_accross_formula(total_elves)
 
 print_solutions(part_1, part_2)
