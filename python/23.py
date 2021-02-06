@@ -1,6 +1,7 @@
 # Day 23: Safe Cracking
 
 from santas_little_helpers import *
+from math import factorial
 
 instructions = [line.split(' ') for line in get_input('inputs/23')]
 
@@ -23,10 +24,10 @@ def assembunny(in_instructions, reg_a_value):
     pos = 0
     registers = {name: 0 for name in {'a', 'b', 'c', 'd'}}
     registers['a'] = reg_a_value
+    a_changes = []
 
     while pos < len(in_instructions):
         operation, *args = in_instructions[pos]
-
         if operation == 'cpy':
             try:
                 registers[args[1]] = int(args[0])
@@ -60,8 +61,19 @@ def assembunny(in_instructions, reg_a_value):
                 pass
 
         pos += 1
-    return registers['a']
+        a_changes.append(str(registers['a']) + ' in position ' + str(pos))
+    return a_changes, registers['a']
 
-part_1 = assembunny(instructions, 7)
-print_solutions(part_1)
+results, part_1 = assembunny(instructions, 7)
+
+# part 2: look at values of 'a' over time to figure out a faster way to solve ti
+# MyFile=open('inputs/23.out','w')
+# for element in results:
+#      MyFile.write(element)
+#      MyFile.write('\n')
+# MyFile.close()
+
+part_2 = factorial(12) + 79 * 74
+print_solutions(part_1, part_2)
 # Part 1 solution is: 10886
+# Part 2 solution is: 479007446
