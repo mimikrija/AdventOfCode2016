@@ -1,4 +1,5 @@
 # Day 25: Clock Signal
+
 from santas_little_helpers import *
 from math import factorial
 
