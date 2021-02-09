@@ -12,8 +12,8 @@ def four_neighbors(in_coordinate):
 
 
 def open_neighbors(in_coordinate):
-    "returns open (ie. not walls) neighbors of `in_coordinate`, taking into account that the map expands in the positive quadrant only (no negative coords allowed)."
-    return {coordinate for coordinate in four_neighbors(in_coordinate) if coordinate in available_positions}
+    "returns open (ie. not walls) neighbors of `in_coordinate`, taking into account that the fixed map open coordinates (`OPEN_COORDINATES`)"
+    return {coordinate for coordinate in four_neighbors(in_coordinate) if coordinate in OPEN_COORDINATES}
 
 
 def BFS_shortest_distance(start, end):
@@ -57,12 +57,12 @@ def add_distances(start, sequence, shortest_so_far):
 
 grid_input = get_input('inputs/24')
 
-available_positions = set()
+OPEN_COORDINATES = set()
 goals = {}
 for row, line in enumerate(grid_input):
     for column, c in enumerate(line):
         if c != '#':
-            available_positions.add((row,column))
+            OPEN_COORDINATES.add((row,column))
             if c != '.':
                 goals[c] = (row, column)
 
